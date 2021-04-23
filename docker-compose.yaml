@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend/Dockerfile
+    command: gunicorn --bind 0.0.0.0:8000 book.wsgi --log-level info --log-file ../logs/gunicorn.log
+    ports:
+      - "8000:8000"
+    restart: always
+    volumes:
+    - static_volume:/code/staticfiles
+    - ./logs:/logs
+    entrypoint: /entrypoint.sh
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+    volumes:
+      - ./nginx/templates:/etc/nginx/templates
+      - static_volume:/staticfiles/static
+    ports:
+      - "8080:80"
+    environment:
+      - NGINX_HOST=localhost
+      - NGINX_PORT=80
+    depends_on:
+      - backend
+    restart: always
+
+volumes:
+  static_volume:
