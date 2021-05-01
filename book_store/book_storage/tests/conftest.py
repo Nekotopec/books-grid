@@ -1,7 +1,9 @@
-import pytest
-from book_storage.factories import BookFactory, AuthorFactory
 from typing import List
+
+import pytest
+
 from book_storage import models
+from book_storage.factories import BookFactory, AuthorFactory
 
 
 @pytest.fixture(autouse=True)

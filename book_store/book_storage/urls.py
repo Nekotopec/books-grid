@@ -3,7 +3,16 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 from rest_framework.routers import SimpleRouter
+
 from .views import BookModelViewSet
+
+
+class OptionalSlashRouter(SimpleRouter):
+
+    def __init__(self):
+        super().__init__()
+        self.trailing_slash = '/?'
+
 
 # Swagger.
 api_info = openapi.Info(
@@ -19,11 +28,11 @@ schema_view = get_schema_view(
 )
 
 # Routers.
-router = SimpleRouter()
+router = OptionalSlashRouter()
 router.register('books', BookModelViewSet)
 
 urlpatterns = [
     path(r'swagger', schema_view.with_ui('swagger', cache_timeout=0),
          name='schema-swagger-ui'),
-    path('api/', include(router.urls))
+    path('', include(router.urls)),
 ]

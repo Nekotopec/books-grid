@@ -13,6 +13,14 @@ services:
     - static_volume:/code/staticfiles
     - ./logs:/logs
     entrypoint: /entrypoint.sh
+#  frontend:
+#    build:
+#      context: .
+#      dockerfile: docker/frontend/Dockerfile
+#    command: npm start
+#    ports:
+#      - "1962:1962"
+#    restart: always
   nginx:
     build:
       context: .
@@ -27,7 +35,9 @@ services:
       - NGINX_PORT=80
     depends_on:
       - backend
+#      - frontend
     restart: always
+
 
 volumes:
   static_volume:

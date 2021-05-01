@@ -1,6 +1,7 @@
-from .models import Book, Author
-from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer
+
+from .models import Book, Author
 
 
 class AuthorSerializer(ModelSerializer):
@@ -14,6 +15,9 @@ class AuthorSerializer(ModelSerializer):
 
     def get_full_name(self, obj):
         """Returns full name of author."""
+
+        if obj.first_name is None:
+            return obj.last_name
         return ' '.join([obj.first_name, obj.last_name])
 
     def create(self, validated_data):
@@ -29,40 +33,52 @@ class AuthorSerializer(ModelSerializer):
 
 
 class BookSerializer(ModelSerializer):
-    author = AuthorSerializer()
-    in_stock = serializers.SerializerMethodField()
-    year = serializers.SerializerMethodField()
+    author = AuthorSerializer(required=False)
+    author_fullname = serializers.CharField(required=False, write_only=True)
 
     class Meta:
         model = Book
-        fields = ['id', 'title', 'year', 'date_of_finishing',
-                  'number_of_pages', 'author', 'in_stock',
+        fields = ['id', 'title', 'year', 'author',
+                  'number_of_pages', 'author_fullname',
                   'number_of_books']
-        read_only_fields = ['author_full_name', 'year']
-        extra_kwargs = {
-            'number_of_books': {'write_only': True},
-            'date_of_finishing': {'write_only': True},
-        }
 
     def create(self, validated_data):
-        author_data = validated_data.pop('author')
-        author = AuthorSerializer().create(author_data)
+        author_data = validated_data.pop('author', None)
+        if author_data:
+            author = AuthorSerializer().create(author_data)
+        else:
+            author = extjs_author_crutch(validated_data)
 
         book = Book.objects.create(author=author,
                                    **validated_data)
         return book
 
     def update(self, instance, validated_data):
-        author_data = validated_data.pop('author')
-        author = AuthorSerializer().create(author_data)
-        validated_data['author_id'] = author.id
+        author_data = validated_data.pop('author', None)
+        if author_data:
+            author = AuthorSerializer().create(author_data)
+            validated_data['author_id'] = author.id
+        elif validated_data.get('author_fullname'):
+            author = extjs_author_crutch(validated_data)
+            validated_data['author_id'] = author.id
+
         book = super().update(instance, validated_data)
         return book
 
-    def get_year(self, obj):
-        """Get year from date of finishing."""
-        return obj.date_of_finishing.year
 
-    def get_in_stock(self, obj):
-        """Check if book in stock."""
-        return obj.check_if_in_stock()
+def extjs_author_crutch(data):
+    """Returns author instance.
+    I made it cause I cant find how edit nested models in grid in extjs."""
+    fullname = data.pop('author_fullname')
+    split_name = fullname.split(' ')
+    if len(split_name) > 1:
+        first_name = split_name[0]
+        last_name = split_name[1]
+    else:
+        first_name = None
+        last_name = split_name[0]
+    author = Author.objects.create(
+        first_name=first_name,
+        last_name=last_name,
+    )
+    return author

@@ -1,10 +1,9 @@
-import factory
-from django.utils.timezone import make_aware
-from . import models
-from factory.django import DjangoModelFactory
+from datetime import date
+
 import factory.fuzzy
-import pytz
-from datetime import datetime
+from factory.django import DjangoModelFactory
+
+from . import models
 
 
 class AuthorFactory(DjangoModelFactory):
@@ -22,7 +21,4 @@ class BookFactory(DjangoModelFactory):
     title = factory.Faker('sentence', nb_words=4)
     number_of_pages = factory.Faker('pyint', min_value=0, max_value=1000)
     number_of_books = factory.Faker('pyint', min_value=0, max_value=400)
-    date_of_finishing = factory.fuzzy.FuzzyDateTime(
-        datetime(1500, 1, 1, tzinfo=pytz.UTC),
-        datetime.now(tz=pytz.UTC)
-    )
+    year = factory.fuzzy.FuzzyInteger(low=0, high=date.today().year)
