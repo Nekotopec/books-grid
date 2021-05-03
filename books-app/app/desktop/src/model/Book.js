@@ -4,9 +4,11 @@ Ext.define('BooksApp.model.Book', {
         'Ext.data.proxy.Rest',
         'Ext.Date'
     ],
+    idProperty: 'id',
     fields: [{
         name: 'id',
-        mapping: 'id'
+        mapping: 'id',
+        type: 'int'
     }, {
         name: 'title',
         mapping: 'title'
