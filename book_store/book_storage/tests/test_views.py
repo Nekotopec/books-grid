@@ -3,6 +3,8 @@ import json
 import pytest
 from django.test.client import Client
 from rest_framework.permissions import AllowAny
+from book.settings import REST_FRAMEWORK
+
 
 from book_storage.views import BookModelViewSet
 
@@ -59,31 +61,33 @@ class TestBookModelViewSet:
         """Test deleting of the book by non-admin user."""
 
         response = self._delete_request(client)
-        assert response.status_code == 403
+        assert response.status_code == 403 or response.status_code == 401
 
     def test_good_deleting(
             self,
             admin_client: Client,
-            create_books
+            create_books,
+            token_header
     ):
         """Test deleting of the book by admin user."""
 
-        response = self._delete_request(admin_client)
+        response = self._delete_request(admin_client, token_header)
         assert response.status_code == 204
 
-    def _delete_request(self, client: Client):
+    def _delete_request(self, client: Client, headers=None):
         """Make delete request with current client."""
 
-        return client.delete('/api/books/1/')
+        return client.delete('/api/books/1/', headers=headers)
 
     def test_patching(
             self,
             admin_client: Client,
-            create_books
+            create_books,
+            token_header
     ):
         """Test patching of information about the book by admin user."""
 
-        response = self._patch_request(admin_client)
+        response = self._patch_request(admin_client, token_header)
         response_data = response.json()
         assert response.status_code == 200
         assert response_data['title'] == self.BOOK_DATA['title']
@@ -102,18 +106,21 @@ class TestBookModelViewSet:
         response = self._patch_request(client)
         assert response.status_code == 403 or response.status_code == 401
 
-    def _patch_request(self, client):
+    def _patch_request(self, client, headers=None):
         return client.patch('/api/books/1/',
                             data=json.dumps(self.BOOK_DATA),
-                            content_type='application/json')
+                            content_type='application/json',
+                            headers=headers
+                            )
 
     def test_good_posting_book(
             self,
             admin_client: Client,
+            token_header
     ):
         """Test posting information about the book by admin user."""
 
-        response = self._post_request(admin_client)
+        response = self._post_request(admin_client, token_header)
         response_data = response.json()
         assert response.status_code == 201
         assert response_data['title'] == self.BOOK_DATA['title']
@@ -131,9 +138,10 @@ class TestBookModelViewSet:
         response = self._post_request(client)
         assert response.status_code == 403 or response.status_code == 401
 
-    def _post_request(self, client: Client):
+    def _post_request(self, client: Client, headers=None):
         """Make post request with current client."""
 
         return client.post('/api/books/',
                            data=json.dumps(self.BOOK_DATA),
-                           content_type='application/json')
+                           content_type='application/json',
+                           **headers)

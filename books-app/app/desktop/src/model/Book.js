@@ -58,7 +58,8 @@ Ext.define('BooksApp.model.Book', {
     proxy: {
 
         type: 'rest',
-        url: 'http://localhost:8080/api/books/',
+        url: '/api/books/',
+        useDefaultXhrHeader: false,
         limitParam: 'limit',
         startParam: 'offset',
         noCache: false,

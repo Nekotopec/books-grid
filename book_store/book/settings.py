@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
     'drf_yasg',
     'book_storage',
 ]
@@ -130,13 +131,12 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
     ],
     # 'DEFAULT_AUTHENTICATION_CLASSES': [
-    #     'rest_framework.authentication.BasicAuthentication',
-    #     'rest_framework.authentication.SessionAuthentication',
-    # ]
+    #     'rest_framework.authentication.TokenAuthentication',
+    # ],
 }
 
 #  Use env var in future.
 DOCKER_ADMIN_PASSWORD = 'admin'
 ADMINS = [
-
+    'admin'
 ]

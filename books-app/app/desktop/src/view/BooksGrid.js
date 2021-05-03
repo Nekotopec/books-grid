@@ -69,16 +69,5 @@ Ext.define('BooksApp.view.BooksGrid', {
         xtype: 'pagingtoolbar',
         displayInfo: true
     },
-    dockedItems: [{
-        xtype: 'toolbar',
-        dock: 'top',
-        items: [{
-            xtype: 'button',
-            text: 'Left Button'
-        }, {
-            xtype: 'button',
-            text: 'Right Button'
-        }]
-    }]
 
 });

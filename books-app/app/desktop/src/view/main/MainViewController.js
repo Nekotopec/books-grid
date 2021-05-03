@@ -1,6 +1,9 @@
 Ext.define('BooksApp.view.main.MainViewController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.mainviewcontroller',
+    requires: [
+        'BooksApp.view.login.LoginView'
+    ],
     onButtonClick: function (button) {
         this.lookupReference('df').setValue(Date.now())
     },
@@ -32,7 +35,12 @@ Ext.define('BooksApp.view.main.MainViewController', {
 
         }
     },
-
+    onLogin: function () {
+        var vid = Ext.create({
+            xtype: 'loginview',
+        });
+        vid.show();
+    },
 
 
 })

@@ -6,6 +6,6 @@ Ext.define('BooksApp.store.Book', {
     autoLoad: true,
     autoSync: true,
     pageSize: 20,
-    sorters: ['title',],
+    sorters: ['title'],
 });
 

@@ -1,6 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 
 from .models import Book
+from .permissions import OnlySafeMethodsOrAdmin
 from .serializers import BookSerializer
 
 
@@ -12,5 +13,6 @@ class BookModelViewSet(ModelViewSet):
        API endpoint that allows books to be viewed or edited.
     """
     # permission_classes = [OnlySafeMethodsOrAdmin]
+
     queryset = Book.objects.all().order_by('title', 'author__last_name')
     serializer_class = BookSerializer

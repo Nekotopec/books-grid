@@ -2,6 +2,7 @@ from django.urls import path, include
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
+from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.routers import SimpleRouter
 
 from .views import BookModelViewSet
@@ -35,4 +36,5 @@ urlpatterns = [
     path(r'swagger', schema_view.with_ui('swagger', cache_timeout=0),
          name='schema-swagger-ui'),
     path('', include(router.urls)),
+    path('token-auth/', obtain_auth_token, name='token_auth'),
 ]
