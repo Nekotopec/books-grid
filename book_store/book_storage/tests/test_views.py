@@ -2,6 +2,16 @@ import json
 
 import pytest
 from django.test.client import Client
+from rest_framework.permissions import AllowAny
+
+from book_storage.views import BookModelViewSet
+
+# Skip decorator.
+
+without_login = pytest.mark.skipif(
+    AllowAny in BookModelViewSet.permission_classes,
+    reason='Permission classes are disabled.'
+)
 
 
 class TestBookModelViewSet:
@@ -28,7 +38,6 @@ class TestBookModelViewSet:
         data = response.json()
         assert len(books) == len(data['results'])
 
-
     def test_one_receive_book(
             self,
             client: Client,
@@ -41,7 +50,7 @@ class TestBookModelViewSet:
         data = response.json()
         assert books[0].title == data['title']
 
-    @pytest.mark.skip(reason="IDK how to login in Extjs.")
+    @without_login
     def test_bad_deleting_book(
             self,
             client: Client,
@@ -61,7 +70,6 @@ class TestBookModelViewSet:
 
         response = self._delete_request(admin_client)
         assert response.status_code == 204
-
 
     def _delete_request(self, client: Client):
         """Make delete request with current client."""
@@ -83,7 +91,7 @@ class TestBookModelViewSet:
             self.BOOK_DATA['author'].values()
         )
 
-    @pytest.mark.skip(reason="IDK how to login in Extjs.")
+    @without_login
     def test_bad_patching(
             self,
             client: Client,
@@ -113,7 +121,7 @@ class TestBookModelViewSet:
             self.BOOK_DATA['author'].values()
         )
 
-    @pytest.mark.skip(reason="IDK how to login in Extjs.")
+    @without_login
     def test_bad_posting_book(
             self,
             client: Client,

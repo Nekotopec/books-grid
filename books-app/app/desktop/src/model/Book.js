@@ -16,6 +16,7 @@ Ext.define('BooksApp.model.Book', {
     }, {
         name: 'number_of_pages',
         mapping: 'number_of_pages'
+    
     }, {
         name: 'author_fullname',
         mapping: 'author.full_name'

@@ -135,4 +135,8 @@ REST_FRAMEWORK = {
     # ]
 }
 
+#  Use env var in future.
+DOCKER_ADMIN_PASSWORD = 'admin'
+ADMINS = [
 
+]

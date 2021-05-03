@@ -5,7 +5,7 @@ Ext.define('BooksApp.store.Book', {
     alias: 'store.book',
     autoLoad: true,
     autoSync: true,
-    pageSize: 14,
-    sorters: ['id',],
+    pageSize: 20,
+    sorters: ['title',],
 });
 
