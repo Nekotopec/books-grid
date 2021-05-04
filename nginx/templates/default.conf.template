@@ -2,7 +2,7 @@ upstream django_backend {
     server backend:8000;
 }
 upstream extjs_frontend {
-    server host.docker.internal:1962;
+    server frontend:1962;
 }
 
 server {

@@ -2,19 +2,24 @@ Ext.define('BooksApp.view.main.MainViewController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.mainviewcontroller',
     requires: [
-        'BooksApp.view.login.LoginView'
+        'BooksApp.view.login.LoginView',
+        'BooksApp.security.Firewall'
     ],
     onButtonClick: function (button) {
         this.lookupReference('df').setValue(Date.now())
     },
     onAddData: function () {
-        var grid = this.lookup('books-grid');
-        var store = grid.getStore()
-        var rec = new BooksApp.model.Book(),
-            rowEditing = grid.findPlugin('rowediting');
-
-        store.insert(0, rec);
-        rowEditing.startEdit(rec, 0);
+        // var grid = this.lookup('books-grid');
+        // var store = grid.getStore()
+        // var rec = new BooksApp.model.Book(),
+        //     rowEditing = grid.findPlugin('rowediting');
+        //
+        // store.insert(0, rec);
+        // rowEditing.startEdit(rec, 0);
+        var addForm = Ext.create({
+            xtype: 'addview',
+        });
+        addForm.show();
     },
 
     onDelete: function () {
@@ -36,11 +41,29 @@ Ext.define('BooksApp.view.main.MainViewController', {
         }
     },
     onLogin: function () {
-        var vid = Ext.create({
+        var login = Ext.create({
             xtype: 'loginview',
         });
-        vid.show();
+        login.show()
+
+        // TODO: should wait until answer.
+        if (BooksApp.security.Firewall.isLoggedIn()) {
+            var loginButton = this.lookup('loginButton');
+            loginButton.setText('Logout');
+            loginButton.setHandler('onLogout');
+        }
+
     },
 
+    onLogout: function () {
+        BooksApp.security.Firewall.logout()
+        if (!BooksApp.security.Firewall.isLoggedIn()) {
+            var loginButton = this.lookup('loginButton');
 
-})
+            loginButton.setText('Login');
+            loginButton.setHandler('onLogin');
+        }
+    }
+
+
+});

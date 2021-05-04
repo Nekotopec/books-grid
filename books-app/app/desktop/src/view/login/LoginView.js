@@ -5,22 +5,6 @@ Ext.define('BooksApp.view.login.LoginView', {
     closable: true,
 
     autoSize: true,
-    profiles: {
-        defaults: {
-            width: 340,
-            height: 544
-        },
-        phone: {
-            defaults: {
-                // reset the properties for phone
-                height: undefined,
-                margin: undefined,
-                padding: undefined,
-                shadow: undefined,
-                width: undefined
-            }
-        }
-    },
     width: 340,
     height: 544,
     layout: {
@@ -29,12 +13,6 @@ Ext.define('BooksApp.view.login.LoginView', {
         align: 'middle'
     },
     scrollable: 'y',
-    otherContent: [
-        {
-            type: 'Controller',
-            path: 'modern/src/view/templates/LoginController.js'
-        }
-    ],
     // setting the background of the container
     style: 'background-color: var(--base-color)',
 

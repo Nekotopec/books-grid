@@ -38,8 +38,15 @@ Ext.define('BooksApp.security.Firewall', {
                 deferred.reject(data, response);
             }
         });
-
+        return deferred.promise;
     },
+
+    logout: function () {
+        var deferred = new Ext.Deferred();
+        BooksApp.security.TokenStorage.clear();
+        deferred.resolve(true);
+        return deferred.promise;
+    }
 
 }, function () {
     Ext.Ajax.on('beforerequest', function (conn, options) {

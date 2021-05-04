@@ -6,6 +6,7 @@ Ext.define('BooksApp.view.main.MainView', {
         'BooksApp.view.main.MainViewController',
         'BooksApp.view.main.MainViewModel',
         'BooksApp.view.BooksGrid',
+        'BooksApp.security.Firewall'
     ],
     viewModel: {
         type: 'mainviewmodel'
@@ -46,7 +47,17 @@ Ext.define('BooksApp.view.main.MainView', {
             }, {
                 text: 'Login',
                 iconCls: 'x-fa fa-user',
-                handler: 'onLogin'
+                handler: 'onLogin',
+                reference: 'loginButton',
+                listeners: {
+                    loggedIn: function () {
+                        if (BooksApp.security.Firewall.isLoggedIn()) {
+                            var loginButton = this.lookup('loginButton');
+                            loginButton.setText('Logout');
+                            loginButton.setHandler('onLogout');
+                        }
+                    }
+                }
             },
             ]
 

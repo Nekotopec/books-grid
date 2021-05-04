@@ -46,7 +46,9 @@ class BookSerializer(ModelSerializer):
         author_data = validated_data.pop('author', None)
         if author_data:
             author = AuthorSerializer().create(author_data)
-            validated_data.pop('author_fullname')
+
+            validated_data.pop('author_fullname', None)
+
         else:
             author = extjs_author_crutch(validated_data)
         book = Book.objects.create(author=author,
@@ -57,8 +59,10 @@ class BookSerializer(ModelSerializer):
         author_data = validated_data.pop('author', None)
         if author_data:
             author = AuthorSerializer().create(author_data)
-            validated_data.pop('author_fullname')
             validated_data['author_id'] = author.id
+
+            validated_data.pop('author_fullname', None)
+
         elif validated_data.get('author_fullname'):
             author = extjs_author_crutch(validated_data)
             validated_data['author_id'] = author.id

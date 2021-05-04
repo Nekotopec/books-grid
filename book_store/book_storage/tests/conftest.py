@@ -26,8 +26,7 @@ def create_books(db) -> List[models.Book]:
 @pytest.fixture(scope='function')
 def token_header(db, client, admin_user):
     token = Token.objects.get_or_create(user=admin_user)
-    print(token[0])
     headers = {
-        'Authorization': f'Token {token[0]}'
+        'HTTP_AUTHORIZATION': f'Token {token[0]}',
     }
     yield headers

@@ -5,7 +5,6 @@ from django.test.client import Client
 from rest_framework.permissions import AllowAny
 from book.settings import REST_FRAMEWORK
 
-
 from book_storage.views import BookModelViewSet
 
 # Skip decorator.
@@ -76,8 +75,9 @@ class TestBookModelViewSet:
 
     def _delete_request(self, client: Client, headers=None):
         """Make delete request with current client."""
-
-        return client.delete('/api/books/1/', headers=headers)
+        if headers is None:
+            headers = {}
+        return client.delete('/api/books/1/', **headers)
 
     def test_patching(
             self,
@@ -107,10 +107,12 @@ class TestBookModelViewSet:
         assert response.status_code == 403 or response.status_code == 401
 
     def _patch_request(self, client, headers=None):
+        if headers is None:
+            headers = {}
         return client.patch('/api/books/1/',
                             data=json.dumps(self.BOOK_DATA),
                             content_type='application/json',
-                            headers=headers
+                            **headers
                             )
 
     def test_good_posting_book(
@@ -140,7 +142,8 @@ class TestBookModelViewSet:
 
     def _post_request(self, client: Client, headers=None):
         """Make post request with current client."""
-
+        if headers is None:
+            headers = {}
         return client.post('/api/books/',
                            data=json.dumps(self.BOOK_DATA),
                            content_type='application/json',
